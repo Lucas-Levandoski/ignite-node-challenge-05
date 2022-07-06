@@ -16,8 +16,6 @@ export class UsersRepository implements IUsersRepository {
   }: IFindUserWithGamesDTO): Promise<User> {
     const user = await (await this.repository.findOneOrFail({ where: { id: user_id } }));
 
-    console.log(user.games);
-
     return user;
   }
 
@@ -32,6 +30,6 @@ export class UsersRepository implements IUsersRepository {
     const firstName = first_name[0].toUpperCase() + first_name.slice(1).toLowerCase();
     const lastName = last_name[0].toUpperCase() + last_name.slice(1).toLowerCase();
 
-    return this.repository.query(`SELECT * FROM users WHERE first_name LIKE '${firstName}' AND last_name LIKE '${lastName}' `);
+    return this.repository.query(`SELECT * FROM users WHERE UPPER(first_name) LIKE UPPER('${firstName}') AND last_name LIKE UPPER('${lastName}') `);
   }
 }
