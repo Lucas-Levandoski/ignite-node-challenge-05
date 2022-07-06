@@ -7,9 +7,11 @@ import { IGamesRepository } from '../IGamesRepository';
 
 export class GamesRepository implements IGamesRepository {
   private repository: Repository<Game>;
+  private userRepository: Repository<User>;
 
   constructor() {
     this.repository = getRepository(Game);
+    this.userRepository = getRepository(User);
   }
 
   async findByTitleContaining(param: string): Promise<Game[]> {
@@ -24,9 +26,9 @@ export class GamesRepository implements IGamesRepository {
   }
 
   async findUsersByGameId(id: string): Promise<User[]> {
-    // return this.repository
-    //   .createQueryBuilder()
-    // Complete usando query builder
-    throw new Error('')
+    return await this.userRepository
+      .createQueryBuilder('users')
+      .innerJoinAndSelect('users.games', 'games')
+      .getMany();
   }
 }
